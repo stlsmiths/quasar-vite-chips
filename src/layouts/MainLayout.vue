@@ -12,7 +12,11 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          <router-link
+            class="no-link"
+            to="/">
+            Quasar App
+          </router-link>
         </q-toolbar-title>
         <q-space/>
         <q-btn
@@ -80,7 +84,7 @@ const essentialLinks = [
     link: 'https://forum.quasar.dev'
   },
   {
-    title: 'stlsmiths',
+    title: 'blunderalong',
     caption: 'My website'
   },
   {
@@ -103,3 +107,9 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>
+<style>
+.no-link {
+  color: white;
+  text-decoration: none;
+}
+</style>

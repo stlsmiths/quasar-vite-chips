@@ -1,12 +1,16 @@
 # Quasar App (qvite-chips)
 
-A Quasar Project
+This is a simple demo project to show using Vue + Quasar + Vite (as build system) with Pinia (store) and Typescript
+via Vue's new "script setup" capability.
+
+## Created ...
+```bash
+yarn create quasar
+```
 
 ## Install the dependencies
 ```bash
-yarn
-# or
-npm install
+yarn install
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
@@ -14,10 +18,14 @@ npm install
 quasar dev
 ```
 
-
 ### Build the app for production
 ```bash
 quasar build
+```
+
+and for Electron apps
+```bash
+quasar build -m electron
 ```
 
 ### Customize the configuration
