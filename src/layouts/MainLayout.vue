@@ -8,7 +8,7 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="toggleLeftDrawer"
+          @click="drawerOpen = !drawerOpen"
         />
 
         <q-toolbar-title>
@@ -30,7 +30,7 @@
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen"
+      v-model="drawerOpen"
       show-if-above
       bordered
     >
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import EssentialLink from 'components/EssentialLink.vue';
 
 // remember defineProps and defineEmits .. no import reqd
@@ -101,11 +101,13 @@ const essentialLinks = [
   }
 ];
 
-const leftDrawerOpen = ref(false)
+const drawerOpen = ref(false)
+const viz = ref(false)
 
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+nextTick( () => {
+  drawerOpen.value = false
+  viz.value = true
+})
 </script>
 <style>
 .no-link {

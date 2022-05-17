@@ -1,7 +1,9 @@
-# Quasar App (qvite-chips)
+# quasar-vite-chips
 
 This is a simple demo project to show using Vue + Quasar + Vite (as build system) with Pinia (store) and Typescript
 via Vue's new "script setup" capability.
+
+Note: Quasar CLI + Vite is still BETA and this demo requires Node > 16.xx
 
 ## Created ...
 ```bash
