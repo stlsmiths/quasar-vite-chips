@@ -11,11 +11,14 @@
     hide-hint
     hide-bottom-space
     multiple
+    new-value-mode="add-unique"
     dense="dense"
     input-debounce="200"
     :options="tagOptions"
     :disable="disable"
     @filter="filterTags"
+    @remove="removeItem"
+    @add="addItem"
     @new-value="createTag"
     @input="inputEvent"
   >
@@ -74,6 +77,7 @@ export default {
 
     syncValue(val) {
       this.valueArray = this.str2Array( val )
+      console.log('syncValue', val, 'valueArray', this.valueArray)
     },
 
     str2Array( str ) {
@@ -94,12 +98,23 @@ export default {
       })
     },
 
+    removeItem(val) {
+      console.log('remove item', val)
+    },
+    addItem(val) {
+      console.log('add item', val)
+    },
+
     createTag(val,done) {
+      alert('createTag fired ' + val)
+      // done(val,'add-unique')
+/*
       this.$store.dispatch('data/addItem', { sprop: 'tags', item: val })
         .then( () => {
           done( val,'add-unique')
           console.log('added store tag', val)
         })
+*/
     },
 
     inputEvent( evt ) {
@@ -109,6 +124,7 @@ export default {
 
   },
   mounted() {
+
     /*
         if ( this.value && this.value.length ) {
           this.valueArray = this.str2Array( this.value )
