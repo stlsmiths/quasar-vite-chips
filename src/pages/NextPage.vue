@@ -1,7 +1,8 @@
 <template>
   <q-oage>
-    <h3>Next Page</h3>
-    <div>
+    <h5>Next Page</h5>
+    <router-link class="mylink" to="/">Go HOME</router-link>
+    <div class="q-mt-lg">
       MyVersion is {{ myVerNum }} and Str {{ myVerStr }}
 
       <q-btn>Thanks !!</q-btn>
@@ -16,7 +17,6 @@
       />
 
       <div>
-
         <q-select
           label="Tags:"
           filled
@@ -36,7 +36,6 @@
 </template>
 <script setup lang="ts">
 import {Ref,ref} from 'vue'
-
 import QSelectChips from "components/QSelectChips.vue";
 
 const myVerNum: Ref<number> = ref(1.23)

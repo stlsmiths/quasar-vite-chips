@@ -20,6 +20,10 @@
         </q-toolbar-title>
         <q-space/>
         <q-btn
+            label="Movies"
+            to="/movies"
+        />
+        <q-btn
           label="Next"
           to="/next"
         />

@@ -1,6 +1,7 @@
 <template>
-  <q-page class="">
-    <h3>Home Page</h3>
+  <q-page>
+    <h5>Home Page</h5>
+    Go To: <router-link class="mylink" to="/next">Next Page</router-link>
     <div class="q-ml-lg">
       <example-component
         title="Example component"
