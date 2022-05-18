@@ -28,7 +28,11 @@
                       :key="r.trackId"
                       clickable
                       @click="selected = r"
+                      style="max-width: 500px"
               >
+                <q-item-section avatar>
+                  <img :src="r.artworkUrl100" width="100" />
+                </q-item-section>
                 <q-item-section>
                   <q-item-label>
                     <span class="text-bold text-amber-6">{{ r.trackName }}</span>
@@ -39,7 +43,9 @@
             </q-list>
           </div>
           <div v-if="selected" class="col">
-            <div>{{ selected?.trackName }}</div>
+            <div>
+              <h5>{{ selected?.trackName }}</h5>
+            </div>
             <div>Release Date: {{ selected.releaseDate }}</div>
             <div>
               <q-video
@@ -69,30 +75,30 @@ const search = ref('')
 const results = ref<ItunesResp[]>([])
 const selected: Ref<ItunesResp | undefined> = ref()
 
-const fields = 'trackId,collectionName,collectionViewUrl,longDescription,shortDescription,trackName,trackViewUrl,previewUrl,releaseDate'
+const fields = 'trackId,collectionName,collectionViewUrl,longDescription,artworkUrl100,shortDescription,trackName,trackViewUrl,previewUrl,releaseDate'
 
 const searchPrep = computed(() => search.value.replaceAll(' ', '+') )
+const stripDate = (d) => d.substring(0,10)
 
-const mapFields = (data) => {
-  let obj: ItunesResp = {} as ItunesResp
+const mapFields = (data: object) => {
+  let obj = {} as ItunesResp
   if (data) {
-    fields.split(',').forEach( f => {
+    fields.split(',').forEach( (f: string) => {
       obj[f] = data[f]
-      if ( f === 'previewUrl' && data[f].endsWith('m4v') ) {
-        // obj[f] = data[f].replace('m4v','mp4')
+      if ( f === 'releaseDate' ) {
+        obj[f] = stripDate(data[f])
       }
     })
   }
   return obj
 }
-const stripDate = (d) => d.substring(0,10)
 
 async function fetchTest() {
   const resp = await api.get(`/search?term=${searchPrep.value}&limit=20&country=US&media=movie`)
 
   if ( resp.data?.results ) {
     console.log('response', resp)
-    results.value = resp.data.results.map( d => mapFields(d) ) //.map( d => )
+    results.value = resp.data.results.map( d => mapFields(d as ItunesResp) ) //.map( d => )
   } else {
     results.value = []
   }

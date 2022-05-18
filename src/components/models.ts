@@ -13,6 +13,7 @@ export interface ItunesResp {
   collectionViewUrl: string,
   longDescription: string,
   shortDescription: string,
+  artworkUrl100: string,
   trackName: string,
   trackViewUrl: string,
   previewUrl: string,
