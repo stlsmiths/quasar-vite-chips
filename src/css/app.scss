@@ -1,4 +1,8 @@
 // app global css in SCSS form
+
+$body-font-size   : 16px !default;
+$body-line-height : 1.5 !default;
+
 .mylink {
   text-decoration: none;
   color: cyan;

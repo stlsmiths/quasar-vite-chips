@@ -24,8 +24,8 @@
             to="/movies"
         />
         <q-btn
-          label="Next"
-          to="/next"
+          label="Chips"
+          to="/chips"
         />
 
 
@@ -82,27 +82,11 @@ const essentialLinks = [
     link: 'https://github.com/quasarframework'
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
+    title: 'Vue JS',
+    caption: 'Vue 3 Guide',
     icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
+    link: 'https://vuejs.org/guide/introduction.html'
   },
-  {
-    title: 'blunderalong',
-    caption: 'My website'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
 ];
 
 const drawerOpen = ref(false)

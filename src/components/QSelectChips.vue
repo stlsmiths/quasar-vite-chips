@@ -4,6 +4,8 @@
     v-model="valueArray"
     :value="taginput"
     :label="label"
+    :options="tagOptions"
+    :disable="disable"
     class="tags-input"
     filled
     use-chips
@@ -14,8 +16,6 @@
     new-value-mode="add-unique"
     dense="dense"
     input-debounce="200"
-    :options="tagOptions"
-    :disable="disable"
     @filter="filterTags"
     @remove="removeItem"
     @add="addItem"
@@ -25,113 +25,117 @@
   </q-select>
 </template>
 
-<script>
+<script setup lang="ts">
+import {ref,Ref,computed,watch,onMounted} from 'vue'
 
-export default {
-  props: {
-    value: {
-      type: String,
-    },
-    label: {
-      type: String,
-      default: 'Enter tags:'
-    },
-    items: {
-      type: Array
-    },
-    arraySeparator: {
-      type: String,
-      default: ' '
-    },
-    disable: {
-      type: Boolean,
-      default: false
-    },
-    dense: {
-      type: Boolean,
-      default: false
-    },
-    returnString: {
-      type: Boolean,
-      default: true
-    }
+const props = defineProps({
+  mvalue: {
+    type: String,
   },
-  data() {
-    return {
-      valueArray: null,
-      vmodel: '',
+  modelValue: {
+    type: String,
+    required: true
+  },
+  label: {
+    type: String,
+    default: 'Enter tags:'
+  },
+  items: {
+    type: Array
+  },
+  arraySeparator: {
+    type: String,
+    default: ' '
+  },
+  disable: {
+    type: Boolean,
+    default: false
+  },
+  dense: {
+    type: Boolean,
+    default: false
+  },
+  returnString: {
+    type: Boolean,
+    default: true
+  }
+})
 
-      taginput: null,
-      tagsModel: ['xyz', 'test'],
-      tagOptions: []
-    }
-  },
-  watch: {
-    value: {
-      handler: 'syncValue',
+const emits = defineEmits(['input','drop','update:modelValue'])
+
+const valueArray: Ref<string[]> = ref([])
+const taginput = ref()
+const tagOptions =  ref<string[]>([])
+
+/*
+watch( props.mvalue, syncValue,
+  {
       immediate: true,
       deep: true
     }
-  },
-  methods: {
-
-    syncValue(val) {
-      this.valueArray = this.str2Array( val )
-      console.log('syncValue', val, 'valueArray', this.valueArray)
-    },
-
-    str2Array( str ) {
-      return str.split( this.arraySeparator )
-    },
-    array2Str( arr ) {
-      return arr.join( this.arraySeparator )
-    },
-
-    filterTags( val, update) {
-      update(() => {
-        if ( !val.length ) {
-          this.tagOptions = this.items
-        } else {
-          const needle = val.toLocaleLowerCase()
-          this.tagOptions = this.items.filter( v => v.toLocaleLowerCase().includes( needle ) ) //.indexOf(needle) > -1)
-        }
-      })
-    },
-
-    removeItem(val) {
-      console.log('remove item', val)
-    },
-    addItem(val) {
-      console.log('add item', val)
-    },
-
-    createTag(val,done) {
-      alert('createTag fired ' + val)
-      // done(val,'add-unique')
-/*
-      this.$store.dispatch('data/addItem', { sprop: 'tags', item: val })
-        .then( () => {
-          done( val,'add-unique')
-          console.log('added store tag', val)
-        })
+)
 */
-    },
+onMounted( () => {
+  syncValue( props.modelValue )
+})
 
-    inputEvent( evt ) {
-//      console.log('input event', evt, this.array2Str(evt), this.valueArray)
-      this.$emit('input', this.returnString ? this.array2Str( evt ) : evt )
-    },
 
-  },
-  mounted() {
-
-    /*
-        if ( this.value && this.value.length ) {
-          this.valueArray = this.str2Array( this.value )
-        }
-    */
-  }
+function syncValue(val: any) {
+  valueArray.value = str2Array( val )
+  console.log('syncValue', val, 'valueArray', valueArray.value)
 }
+
+function str2Array( str: string ): string[] {
+  return str.split( props.arraySeparator )
+}
+
+function array2Str( arr: string[] ): string {
+  return arr.join( props.arraySeparator )
+}
+
+const valueStr = computed( () => array2Str( valueArray.value ) )
+
+watch( valueStr, (vs) => {
+  emits( 'update:modelValue', vs )
+})
+
+function filterTags( val: string, update: Function): void {
+  update(() => {
+    if ( !val.length ) {
+      tagOptions.value = props.items as string[]
+    } else {
+      const needle = val.toLocaleLowerCase()
+      tagOptions.value = props.items.filter( v => v.toLocaleLowerCase().includes( needle ) ) as string[]
+    }
+  })
+}
+
+function removeItem(val: any) {
+  console.log('remove item', val)
+}
+
+function addItem(val: any) {
+  console.log('add item', val)
+}
+
+function createTag(val: string, done: Function) {
+  alert('createTag fired ' + val)
+  // done(val,'add-unique')
+/*
+  this.$store.dispatch('data/addItem', { sprop: 'tags', item: val })
+    .then( () => {
+      done( val,'add-unique')
+      console.log('added store tag', val)
+    })
+*/
+}
+
+function inputEvent( evt: any ): void {
+//      console.log('input event', evt, this.array2Str(evt), this.valueArray)
+  console.log('inputEvent', evt, valueArray.value )
+  // emits('input', props.returnString ? array2Str( evt ) : evt )
+}
+
 </script>
 
 <style scoped lang="scss">
