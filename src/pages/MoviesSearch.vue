@@ -13,6 +13,7 @@
         <q-btn @click="search=''">Clear</q-btn>
       </div>
     </div>
+
     <br>{{ searchPrep }}
 
     <div class="q-mt-lg" v-if="search">
@@ -36,9 +37,11 @@
                 <q-item-section>
                   <q-item-label>
                     <span class="text-bold text-amber-6">{{ r.trackName }}</span>
-                    ( {{ stripDate(r.releaseDate) }} )</q-item-label>
+                  </q-item-label>
+                  <q-item-label>( {{ stripDate(r.releaseDate) }} )</q-item-label>
                   <q-item-label caption>{{ r.shortDescription }}</q-item-label>
                 </q-item-section>
+                <q-separator></q-separator>
               </q-item>
             </q-list>
           </div>
@@ -54,7 +57,7 @@
                   :src="selected.previewUrl"
               />
             </div>
-            <div class="q-my-lg">
+            <div class="q-my-lg font-larger text-cyan-4">
               {{ selected.longDescription }}
             </div>
           </div>
@@ -93,6 +96,8 @@ const mapFields = (data: object) => {
   return obj
 }
 
+// tmdb or omdb
+
 async function fetchTest() {
   const resp = await api.get(`/search?term=${searchPrep.value}&limit=20&country=US&media=movie`)
 
@@ -104,4 +109,29 @@ async function fetchTest() {
   }
 }
 
+// ie by AMG Video ID: https://itunes.apple.com/lookup?amgVideoId=17120.
+async function fetchVideo( video: ItunesResp ) {
+  const amgID = video.trackId
+  const resp = await api.get(`/lookup?id=${amgID}`)
+  // const resp = await api.get(`/lookup?amgVideoId=${amgID}`)
+
+  // console.log('response', resp)
+
+/*
+  if ( resp.data?.results ) {
+    console.log('response', resp)
+    results.value = resp.data.results.map( d => mapFields(d as ItunesResp) ) //.map( d => )
+  } else {
+    results.value = []
+  }
+*/
+}
+
 </script>
+
+<style>
+.font-larger {
+  font-size: larger;
+  line-height: 2rem;
+}
+</style>
