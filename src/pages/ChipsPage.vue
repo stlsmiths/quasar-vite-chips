@@ -8,7 +8,9 @@
         <b>QselectChips version:</b>
         <QSelectChips
           v-model="tags"
+          label="Enter tags for this object:"
           :items="tagItems"
+          style="width: 40em"
           @input="onTagInput"
           @drop="onTagDrop"
         />
@@ -41,14 +43,22 @@
 </template>
 <script setup lang="ts">
 import {Ref,watch,ref} from 'vue'
+import {useExampleStore} from "stores/example-store";
 import QSelectChips from "components/QSelectChips.vue";
+
+const exStore = useExampleStore()
 
 const myVerNum: Ref<number> = ref(1.23)
 const myVerStr: Ref<string> = ref(myVerNum.value + '.4.56a')
 
-const tagItems = ref([ 'red', 'green', 'drums', 'bass', 'piano', 'guitar', 'used', 'new',
+const tagItems = exStore.tags
+
+/*
+    ref([ 'red', 'green', 'drums', 'bass', 'piano', 'guitar', 'used', 'new',
  'bassoon', 'trumpet', 'violin', 'trombone'
 ])
+*/
+
 const options = ref(tagItems.value)
 
 const tags = ref('blue guitar new')
@@ -59,8 +69,9 @@ watch( tags, () => {
   tagsArray.value = tags.value.split(' ')
 })
 
-const onTagDrop = (evt: string) => {
-  alert('tag dropped = ' + evt)
+const onTagDrop = (evt: any) => {
+  alert('tag dropped = ' + evt.value)
+  exStore.dropTag( evt.value )
 }
 
 const onTagInput = (evt: string) => {

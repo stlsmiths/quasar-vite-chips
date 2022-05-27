@@ -5,6 +5,16 @@ via Vue's new "script setup" capability.
 
 Note: Quasar CLI + Vite is still BETA and this demo requires Node > 16.xx
 
+### Status / Notes
+
+This repo is intended to help me transition some of my older apps that use Vue 2.x or 3.x and older Quasar into the new Q + Vite format.  
+
+Currently converting key components from the Trussia-Q app
+ * QSelectChips ... was old `TRTagsComp`
+ * old `TRDatePicker`
+ * old `TRAutoComp`
+ * old `TRNoteEditor` which uses QEditor with custom toolbars  
+
 ## Created ...
 ```bash
 yarn create quasar

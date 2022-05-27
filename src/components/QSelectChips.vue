@@ -36,7 +36,7 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: 'Enter tags:'
+    default: 'Enter items:'
   },
   items: {
     type: Array
@@ -156,6 +156,7 @@ function filterTags( val: string, update: Function): void {
 
 function removeItem(val: any) {
   console.log('remove item', val)
+  emits('drop', val)
 }
 
 function addItem(val: any) {
