@@ -86,11 +86,6 @@ onMounted( () => {
   syncValue( props.modelValue )
 })
 
-watch(
-  props.items,
-  (vals) => tagOptions.value = [...vals],
-  {immediate: true}
-)
 
 const options = computed( () => props.filterExclude
   ? tagOptions.value.filter( i => valueArray.value.indexOf(i) === -1)
@@ -100,6 +95,12 @@ const options = computed( () => props.filterExclude
 const propsOptions = computed( () => props.filterExclude
   ? props.items.filter( i => valueArray.value.indexOf(i) === -1)
   : props.items
+)
+
+watch(
+  propsOptions,
+  (vals) => tagOptions.value = [...vals],
+  {immediate: true}
 )
 
 
@@ -130,7 +131,7 @@ function resetVal() {
 
 function filterTags( val: string, update: Function): void {
   update(() => {
-    const opts = props.items as string[]
+    const opts = propsOptions.value
     if ( !val.length ) {
       tagOptions.value = opts
     } else {
