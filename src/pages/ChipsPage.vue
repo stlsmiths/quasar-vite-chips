@@ -1,5 +1,5 @@
 <template>
-  <q-oage>
+  <q-page>
     <h5>Chips Page</h5>
     <router-link class="mylink" to="/">Go HOME</router-link>
     <div class="q-mt-lg">
@@ -37,7 +37,7 @@
       </div>
 
     </div>
-  </q-oage>
+  </q-page>
 </template>
 <script setup lang="ts">
 import {Ref,watch,ref} from 'vue'
@@ -46,7 +46,8 @@ import QSelectChips from "components/QSelectChips.vue";
 const myVerNum: Ref<number> = ref(1.23)
 const myVerStr: Ref<string> = ref(myVerNum.value + '.4.56a')
 
-const tagItems = ref([ 'red', 'green', 'drums', 'bass', 'piano', 'guitar', 'used', 'new'
+const tagItems = ref([ 'red', 'green', 'drums', 'bass', 'piano', 'guitar', 'used', 'new',
+ 'bassoon', 'trumpet', 'violin', 'trombone'
 ])
 const options = ref(tagItems.value)
 

@@ -2,7 +2,6 @@
   <q-select
     v-if="items && items.length"
     v-model="valueArray"
-    :value="taginput"
     :label="label"
     :options="tagOptions"
     :disable="disable"
@@ -14,7 +13,7 @@
     hide-bottom-space
     multiple
     new-value-mode="add-unique"
-    dense="dense"
+    :dense="dense"
     input-debounce="200"
     @filter="filterTags"
     @remove="removeItem"
@@ -53,7 +52,15 @@ const props = defineProps({
   },
   dense: {
     type: Boolean,
+    default: true
+  },
+  filterStartsWith: {
+    type: Boolean,
     default: false
+  },
+  filterExclude: {
+    type: Boolean,
+    default: true
   },
   returnString: {
     type: Boolean,
@@ -77,8 +84,19 @@ watch( props.mvalue, syncValue,
 */
 onMounted( () => {
   syncValue( props.modelValue )
+  tagOptions.value = [ ...props.items ]
 })
 
+watch(
+  props.items,
+  (vals) => tagOptions.value = [...vals],
+  {immediate: true}
+)
+
+const options = computed( () => props.filterExclude
+  ? tagOptions.value.filter( i => valueArray.value.indexOf(i) === -1)
+  : tagOptions.value
+)
 
 function syncValue(val: any) {
   valueArray.value = str2Array( val )
@@ -102,10 +120,23 @@ watch( valueStr, (vs) => {
 function filterTags( val: string, update: Function): void {
   update(() => {
     if ( !val.length ) {
-      tagOptions.value = props.items as string[]
+      tagOptions.value = options.value as string[]
     } else {
       const needle = val.toLocaleLowerCase()
-      tagOptions.value = props.items.filter( v => v.toLocaleLowerCase().includes( needle ) ) as string[]
+/*
+      const opts = props.filterExclude
+        ? props.items.filter( i => valueArray.value.indexOf(i) === -1)
+        : props.items
+*/
+      tagOptions.value = options.value.filter( v => {
+        let rtn = false
+        if (props.filterStartsWith ) {
+          rtn = v.toLocaleLowerCase().startsWith(needle)
+        } else {
+          rtn = v.toLocaleLowerCase().includes(needle)
+        }
+        return rtn
+      }) as string[]
     }
   })
 }
