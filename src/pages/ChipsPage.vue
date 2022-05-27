@@ -9,6 +9,7 @@
         <QSelectChips
           v-model="tags"
           :items="tagItems"
+          :filter-exclude="false"
           @input="onTagInput"
           @drop="onTagDrop"
         />

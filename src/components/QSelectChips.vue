@@ -5,6 +5,7 @@
     :label="label"
     :options="tagOptions"
     :disable="disable"
+    ref="qselect"
     class="tags-input"
     filled
     use-chips
@@ -19,9 +20,7 @@
     @remove="removeItem"
     @add="addItem"
     @new-value="createTag"
-    @input="inputEvent"
-  >
-  </q-select>
+  />
 </template>
 
 <script setup lang="ts">
@@ -73,6 +72,7 @@ const emits = defineEmits(['input','drop','update:modelValue'])
 const valueArray: Ref<string[]> = ref([])
 const taginput = ref()
 const tagOptions =  ref<string[]>([])
+const qselect = ref()
 
 /*
 watch( props.mvalue, syncValue,
@@ -84,7 +84,6 @@ watch( props.mvalue, syncValue,
 */
 onMounted( () => {
   syncValue( props.modelValue )
-  tagOptions.value = [ ...props.items ]
 })
 
 watch(
@@ -97,6 +96,13 @@ const options = computed( () => props.filterExclude
   ? tagOptions.value.filter( i => valueArray.value.indexOf(i) === -1)
   : tagOptions.value
 )
+
+const propsOptions = computed( () => props.filterExclude
+  ? props.items.filter( i => valueArray.value.indexOf(i) === -1)
+  : props.items
+)
+
+
 
 function syncValue(val: any) {
   valueArray.value = str2Array( val )
@@ -117,10 +123,16 @@ watch( valueStr, (vs) => {
   emits( 'update:modelValue', vs )
 })
 
+function resetVal() {
+  qselect.value.updateInputValue('')
+  qselect.value.filter('')
+}
+
 function filterTags( val: string, update: Function): void {
   update(() => {
+    const opts = props.items as string[]
     if ( !val.length ) {
-      tagOptions.value = options.value as string[]
+      tagOptions.value = opts
     } else {
       const needle = val.toLocaleLowerCase()
 /*
@@ -128,7 +140,7 @@ function filterTags( val: string, update: Function): void {
         ? props.items.filter( i => valueArray.value.indexOf(i) === -1)
         : props.items
 */
-      tagOptions.value = options.value.filter( v => {
+      tagOptions.value = opts.filter( v => {
         let rtn = false
         if (props.filterStartsWith ) {
           rtn = v.toLocaleLowerCase().startsWith(needle)
@@ -147,10 +159,12 @@ function removeItem(val: any) {
 
 function addItem(val: any) {
   console.log('add item', val)
+  resetVal()
 }
 
 function createTag(val: string, done: Function) {
   alert('createTag fired ' + val)
+  resetVal()
   // done(val,'add-unique')
 /*
   this.$store.dispatch('data/addItem', { sprop: 'tags', item: val })
