@@ -11,10 +11,9 @@
           label="Enter tags for this object:"
           :items="tagItems"
           style="width: 40em"
-          @input="onTagInput"
-          @drop="onTagDrop"
+          @new-item="onTagAdd"
         />
-        v-model: {{tags}}
+        v-model: {{ tags }}
       </div>
 
       <div class="q-my-lg">
@@ -61,17 +60,24 @@ const tagItems = exStore.tags
 
 const options = ref(tagItems.value)
 
-const tags = ref('blue guitar new')
+// const tags = ref('blue guitar new')
 
-const tagsArray = ref( tags.value.split(' ') )
+// const tagsArray = ref( tags.value.split(' ') )
+
+const tagsArray = ref( [ exStore.tags[2], exStore.tags[3], exStore.tags[6]  ] )
+const tags = ref( tagsArray.value.join(' ') )
 
 watch( tags, () => {
   tagsArray.value = tags.value.split(' ')
 })
 
+function onTagAdd(tag) {
+  alert('new tag added + ' + tag)
+  exStore.addTag( tag )
+}
+
 const onTagDrop = (evt: any) => {
   alert('tag dropped = ' + evt.value)
-  exStore.dropTag( evt.value )
 }
 
 const onTagInput = (evt: string) => {

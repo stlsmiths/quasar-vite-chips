@@ -3,10 +3,10 @@
     v-if="items && items.length"
     v-model="valueArray"
     :label="label"
-    :options="tagOptions"
+    :options="options"
     :disable="disable"
     ref="qselect"
-    class="tags-input"
+    class="Items-input"
     filled
     use-chips
     use-input
@@ -16,10 +16,10 @@
     new-value-mode="add-unique"
     :dense="dense"
     input-debounce="200"
-    @filter="filterTags"
+    @filter="filterItems"
     @remove="removeItem"
     @add="addItem"
-    @new-value="createTag"
+    @new-value="newItem"
   />
 </template>
 
@@ -67,11 +67,11 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['input','drop','update:modelValue'])
+const emits = defineEmits(['new-item','drop-item','add-item','update:modelValue'])
 
 const valueArray: Ref<string[]> = ref([])
 const taginput = ref()
-const tagOptions =  ref<string[]>([])
+const options =  ref<string[]>([])
 const qselect = ref()
 
 /*
@@ -87,11 +87,6 @@ onMounted( () => {
 })
 
 
-const options = computed( () => props.filterExclude
-  ? tagOptions.value.filter( i => valueArray.value.indexOf(i) === -1)
-  : tagOptions.value
-)
-
 const propsOptions = computed( () => props.filterExclude
   ? props.items.filter( i => valueArray.value.indexOf(i) === -1)
   : props.items
@@ -99,11 +94,9 @@ const propsOptions = computed( () => props.filterExclude
 
 watch(
   propsOptions,
-  (vals) => tagOptions.value = [...vals],
+  (vals) => options.value = [...vals],
   {immediate: true}
 )
-
-
 
 function syncValue(val: any) {
   valueArray.value = str2Array( val )
@@ -129,19 +122,14 @@ function resetVal() {
   qselect.value.filter('')
 }
 
-function filterTags( val: string, update: Function): void {
+function filterItems( val: string, update: Function): void {
   update(() => {
     const opts = propsOptions.value
     if ( !val.length ) {
-      tagOptions.value = opts
+      options.value = opts
     } else {
       const needle = val.toLocaleLowerCase()
-/*
-      const opts = props.filterExclude
-        ? props.items.filter( i => valueArray.value.indexOf(i) === -1)
-        : props.items
-*/
-      tagOptions.value = opts.filter( v => {
+      options.value = opts.filter( v => {
         let rtn = false
         if (props.filterStartsWith ) {
           rtn = v.toLocaleLowerCase().startsWith(needle)
@@ -155,32 +143,21 @@ function filterTags( val: string, update: Function): void {
 }
 
 function removeItem(val: any) {
-  console.log('remove item', val)
-  emits('drop', val)
+  // console.log('remove item', val)
+  emits('drop-item', val)
 }
 
 function addItem(val: any) {
-  console.log('add item', val)
+  // console.log('add item', val)
   resetVal()
+  emits('add-item', val )
 }
 
-function createTag(val: string, done: Function) {
-  alert('createTag fired ' + val)
+function newItem(val: string, done: Function) {
+  // alert('createTag fired ' + val)
   resetVal()
-  // done(val,'add-unique')
-/*
-  this.$store.dispatch('data/addItem', { sprop: 'tags', item: val })
-    .then( () => {
-      done( val,'add-unique')
-      console.log('added store tag', val)
-    })
-*/
-}
-
-function inputEvent( evt: any ): void {
-//      console.log('input event', evt, this.array2Str(evt), this.valueArray)
-  console.log('inputEvent', evt, valueArray.value )
-  // emits('input', props.returnString ? array2Str( evt ) : evt )
+  emits('new-item', val)
+  done(val,'add-unique')
 }
 
 </script>
