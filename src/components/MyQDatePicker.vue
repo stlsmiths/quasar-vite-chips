@@ -3,6 +3,7 @@
        filled
        v-model="dateStr"
        :label="label"
+       ref="qinput"
        :hint="hint"
        hide-hint
        :dense="dense"
@@ -10,13 +11,12 @@
        :disable="disable"
        :lazy-rules="required"
        :rules="[ val => val && val.length > 0 || 'Entry is required']"
-       @update:model-value="dateStr=$event;onInputUpdate($event)"
+       @change="onChange"
       >
       <template v-slot:append>
         <q-icon name="event" class="cursor-pointer">
           <q-popup-proxy ref="qDateProxy" v-model="qpshow" transition-show="scale" transition-hide="scale">
             <q-date v-model="dateStr"
-                    ref="qdate"
                     minimal
                     mask="YYYY-MM-DD"
                     @update:model-value="onDateUpdate"
@@ -64,40 +64,40 @@ const props = defineProps({
 const emits = defineEmits(['input','update:model-value'])
 
 const dateStr = ref<string|null>(null)
-const qdateProxy = ref(null)
 const qpshow = ref(false)
+const qinput = ref(null)
 
-onMounted(() => {
-  if ( props.modelValue ) {
-    dateStr.value = props.modelValue
-  }
-})
-
-/*
-watch( props.modelValue, (v) => {
-  console.log('changeVal', v, dateStr.value )
-  dateStr.value = v
-}, { immediate: true })
-*/
+watch(
+    () => props.modelValue,
+    (val) => {
+      dateStr.value = props.modelValue
+    },
+    {immediate: true}
+)
 
 function changeValue( val ) {
-  //this.$emit('input', )
   console.log('changeVal', val, dateStr.value )
   dateStr.value = val
+  emits('update:model-value', dateStr.value)
+  qinput.value.blur()
+  qpshow.value = false
 }
 
 function onDateUpdate(evt) {
   console.log('dateinput', evt)
-  dateStr.value = evt
-  emits('update:model-value', dateStr.value)
-  // console.log('qdate', qdateProxy.value )
-  qpshow.value = false
+  changeValue(evt)
 }
+
+function onChange(evt) {
+  // console.log('change', evt)
+  changeValue(evt)
+  // console.log('qinput', qinput.value )
+}
+
 
 function onInputUpdate(evt) {
   console.log('onInput', evt)
-  dateStr.value = evt
-  emits('update:model-value', dateStr.value)
+  changeValue(evt)
 }
 </script>
 

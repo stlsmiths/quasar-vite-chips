@@ -74,6 +74,7 @@ onMounted( () => {
   syncValue( props.modelValue )
 })
 
+// replace with watch( () => props.modelValue ??
 
 const propsOptions = computed( () => props.filterExclude
   ? props.items.filter( i => valueArray.value.indexOf(i) === -1)
