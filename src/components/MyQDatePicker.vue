@@ -64,8 +64,8 @@ const props = defineProps({
 const emits = defineEmits(['input','update:model-value'])
 
 const dateStr = ref<string|null>(null)
-const qpshow = ref(false)
-const qinput = ref(null)
+const qpshow = ref<boolean>(false)
+const qinput = ref<any>(null)
 
 watch(
     () => props.modelValue,
@@ -76,7 +76,7 @@ watch(
 )
 
 function changeValue( val ) {
-  console.log('changeVal', val, dateStr.value )
+  // console.log('changeVal', val, dateStr.value )
   dateStr.value = val
   emits('update:model-value', dateStr.value)
   qinput.value.blur()
@@ -84,19 +84,12 @@ function changeValue( val ) {
 }
 
 function onDateUpdate(evt) {
-  console.log('dateinput', evt)
+  // console.log('dateinput', evt)
   changeValue(evt)
 }
 
 function onChange(evt) {
   // console.log('change', evt)
-  changeValue(evt)
-  // console.log('qinput', qinput.value )
-}
-
-
-function onInputUpdate(evt) {
-  console.log('onInput', evt)
   changeValue(evt)
 }
 </script>

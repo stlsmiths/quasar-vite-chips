@@ -4,15 +4,6 @@
     Go To: <router-link class="mylink" to="/chips">Chips Page</router-link>
     <div class="q-ml-lg">
 
-      <TRDatePicker
-          class="q-ml-md"
-        :value="idate"
-        dense
-        @input="idate=$event"
-      />
-
-
-      <br><br>
       MyQDatePicker version:
 
       <MyQDatePicker
