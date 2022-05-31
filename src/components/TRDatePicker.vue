@@ -1,5 +1,4 @@
 <template>
-  <div>
     <q-input
        filled
        :value="dateStr"
@@ -29,7 +28,6 @@
         </q-icon>
       </template>
     </q-input>
-  </div>
 </template>
 
 <script>

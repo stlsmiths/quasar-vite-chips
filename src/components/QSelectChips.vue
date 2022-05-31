@@ -27,9 +27,6 @@
 import {ref,Ref,computed,watch,onMounted} from 'vue'
 
 const props = defineProps({
-  mvalue: {
-    type: String,
-  },
   modelValue: {
     type: String,
     required: true
@@ -70,18 +67,9 @@ const props = defineProps({
 const emits = defineEmits(['new-item','drop-item','add-item','update:modelValue'])
 
 const valueArray: Ref<string[]> = ref([])
-const taginput = ref()
 const options =  ref<string[]>([])
 const qselect = ref()
 
-/*
-watch( props.mvalue, syncValue,
-  {
-      immediate: true,
-      deep: true
-    }
-)
-*/
 onMounted( () => {
   syncValue( props.modelValue )
 })

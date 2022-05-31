@@ -17,16 +17,16 @@ export const useExampleStore = defineStore('example', {
     doubleCount: (state) => state.counter * 2,
   },
   actions: {
-    increment() {
+    increment(): void {
       this.counter++;
     },
-    addTag(tag: string) {
+    addTag(tag: string): void {
       this.tags.push( tag )
     },
-    dropTag(tag: string) {
+    dropTag(tag: string): void {
       this.tags = this.tags.filter( t => t !== tag )
     },
-    setTags(tags: string[]) {
+    setTags(tags: string[]): void {
       this.activeTags = [...tags]
     }
   },

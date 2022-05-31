@@ -3,51 +3,54 @@
     <h5>Home Page</h5>
     Go To: <router-link class="mylink" to="/chips">Chips Page</router-link>
     <div class="q-ml-lg">
-      <example-component
-        title="Example component"
-        active
-        :todos="todos"
-        :meta="meta"
-      ></example-component>
+
+      <TRDatePicker
+          class="q-ml-md"
+        :value="idate"
+        dense
+        @input="idate=$event"
+      />
+
+
+      <br><br>
+      MyQDatePicker version:
+
+      <MyQDatePicker
+          v-model="idate"
+      />
+
+
+      <br><br>
+
+      RAW Qinput QDate type:
+      <q-input filled v-model="idate" mask="date" :rules="['date']">
+        <template v-slot:append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-date v-model="idate">
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+
     </div>
   </q-page>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
-import { defineComponent, ref } from 'vue';
+import {  ref } from 'vue';
+import TRDatePicker from "components/TRDatePicker.vue";
+import MyQDatePicker from "components/MyQDatePicker.vue";
 
-export default defineComponent({
-  name: 'IndexPage',
-  components: { ExampleComponent },
-  setup () {
-    const todos = ref<Todo[]>([
-      {
-        id: 1,
-        content: 'ct1'
-      },
-      {
-        id: 2,
-        content: 'ct2'
-      },
-      {
-        id: 3,
-        content: 'ct3'
-      },
-      {
-        id: 4,
-        content: 'ct4'
-      },
-      {
-        id: 5,
-        content: 'ct5'
-      }
-    ]);
-    const meta = ref<Meta>({
-      totalCount: 1200
-    });
-    return { todos, meta };
-  }
-});
+//    const todos = ref<Todo[]>([
+const meta = ref<Meta>({  totalCount: 1200 });
+
+const idate = ref<string>('2019-10-05')
+
+
 </script>
