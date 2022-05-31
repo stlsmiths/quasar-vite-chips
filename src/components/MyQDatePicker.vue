@@ -29,7 +29,6 @@
         </q-icon>
       </template>
     </q-input>
-  qpshow {{ qpshow }}
 </template>
 
 <script setup lang="ts">
