@@ -41,7 +41,7 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import {Ref,watch,ref} from 'vue'
+import {Ref,watch,ref,onMounted} from 'vue'
 import {useExampleStore} from "stores/example-store";
 import QSelectChips from "components/QSelectChips.vue";
 
@@ -51,24 +51,14 @@ const myVerNum: Ref<number> = ref(1.23)
 const myVerStr: Ref<string> = ref(myVerNum.value + '.4.56a')
 
 const tagItems = exStore.tags
-
-/*
-    ref([ 'red', 'green', 'drums', 'bass', 'piano', 'guitar', 'used', 'new',
- 'bassoon', 'trumpet', 'violin', 'trombone'
-])
-*/
+const tagsArray = ref( exStore.initTags )
+const tags = ref( tagsArray.value.join(' ') )
 
 const options = ref(tagItems.value)
 
-// const tags = ref('blue guitar new')
-
-// const tagsArray = ref( tags.value.split(' ') )
-
-const tagsArray = ref( [ exStore.tags[2], exStore.tags[3], exStore.tags[6]  ] )
-const tags = ref( tagsArray.value.join(' ') )
-
 watch( tags, () => {
   tagsArray.value = tags.value.split(' ')
+  exStore.setTags(tagsArray.value)
 })
 
 function onTagAdd(tag) {
