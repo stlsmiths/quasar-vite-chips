@@ -8,13 +8,19 @@
 
       <MyQDatePicker
           v-model="idate"
+          style="width: 15rem"
       />
 
 
       <br><br>
 
       RAW Qinput QDate type:
-      <q-input filled v-model="idate" mask="date" :rules="['date']">
+      <q-input
+          v-model="idate"
+          style="width: 15rem"
+          filled
+          mask="date"
+          :rules="['date']">
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
