@@ -77,25 +77,20 @@ const dateStr = ref<string|null>()
 const qpshow = ref<boolean>(false)
 const qinput = ref<any>()
 
-watch(
-    () => props.modelValue,
-    (val) => {
-      dateStr.value = props.modelValue
-    },
-    {immediate: true}
-)
-
-function fmtDate(d: any): string {
-  return d.getMonth ? d.toISOString().substring(0,10) : new Date(d).toISOString().substring(0,10)
-}
 
 watchEffect( () => {
   if ( !props.modelValue || props.modelValue === '') {
     if ( props.initToday ) {
       dateStr.value = fmtDate( new Date() )
     }
+  } else {
+    dateStr.value = props.modelValue
   }
 })
+
+function fmtDate(d: any): string {
+  return d.getMonth ? d.toISOString().substring(0,10) : new Date(d).toISOString().substring(0,10)
+}
 
 function changeValue( val: string ) {
   // console.log('changeVal', val, dateStr.value )

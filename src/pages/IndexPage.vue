@@ -18,7 +18,7 @@
           <MyQDatePicker
               v-model="ndate"
               label="Initial null date"
-              :init-today="false"
+              :init-today="true"
           />
         </div>
         <div class="col-3">
@@ -54,7 +54,7 @@
 
         </div>
         <div class="col-3">
-          
+
         </div>
       </div>
     </div>
