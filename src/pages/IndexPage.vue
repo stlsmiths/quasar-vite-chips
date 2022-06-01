@@ -48,7 +48,7 @@
     </div>
 
     <div class="q-ml-md">
-      <h6>AutoComplete components:</h6>
+      <h6>AutoComplete Components:</h6>
       <div class="row">
         <div class="col-3">
 
