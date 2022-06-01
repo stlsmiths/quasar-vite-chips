@@ -7,7 +7,7 @@
        :hint="hint"
        hide-hint
        :dense="dense"
-       mask="####-##-##"
+       :mask="inputMask"
        :disable="disable"
        :lazy-rules="required"
        :rules="[ val => val && val.length > 0 || 'Entry is required']"
@@ -18,7 +18,7 @@
           <q-popup-proxy ref="qDateProxy" v-model="qpshow" transition-show="scale" transition-hide="scale">
             <q-date v-model="dateStr"
                     minimal
-                    mask="YYYY-MM-DD"
+                    :mask="qdateMask"
                     @update:model-value="onDateUpdate"
                     >
               <div class="row items-center justify-end">
@@ -32,11 +32,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref,computed, watch, onMounted} from 'vue'
+import { ref, watchEffect, watch, onMounted} from 'vue'
 
 const props = defineProps({
   modelValue: {
-    type: String,
+    type: String
   },
   label: {
     type: String,
@@ -44,7 +44,18 @@ const props = defineProps({
   },
   hint: {
     type: String,
-    default: 'YYYY-MM-DD format'
+  },
+  initToday: {
+    type: Boolean,
+    default: true
+  },
+  inputMask: {
+    type: String,
+    default: '####-##-##'
+  },
+  qdateMask: {
+    type: String,
+    default: 'YYYY-MM-DD'
   },
   dense: {
     type: Boolean,
@@ -62,9 +73,9 @@ const props = defineProps({
 
 const emits = defineEmits(['input','update:model-value'])
 
-const dateStr = ref<string|null>(null)
+const dateStr = ref<string|null>()
 const qpshow = ref<boolean>(false)
-const qinput = ref<any>(null)
+const qinput = ref<any>()
 
 watch(
     () => props.modelValue,
@@ -74,7 +85,19 @@ watch(
     {immediate: true}
 )
 
-function changeValue( val ) {
+function fmtDate(d: any): string {
+  return d.getMonth ? d.toISOString().substring(0,10) : new Date(d).toISOString().substring(0,10)
+}
+
+watchEffect( () => {
+  if ( !props.modelValue || props.modelValue === '') {
+    if ( props.initToday ) {
+      dateStr.value = fmtDate( new Date() )
+    }
+  }
+})
+
+function changeValue( val: string ) {
   // console.log('changeVal', val, dateStr.value )
   dateStr.value = val
   emits('update:model-value', dateStr.value)
