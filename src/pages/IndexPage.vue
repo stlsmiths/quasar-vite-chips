@@ -66,6 +66,15 @@
 
         </div>
       </div>
+
+      <div>
+        Note Editor:
+        <MyQEditor
+          v-model="note"
+          @update:model-value="updateNote"
+        />
+        note {{ note }}
+      </div>
     </div>
   </q-page>
 </template>
@@ -78,6 +87,7 @@ import MyQDatePicker from "components/MyQDatePicker.vue";
 import MyQAutoComp from "components/MyQAutoComp.vue";
 
 import {useExampleStore} from "stores/example-store";
+import MyQEditor from "components/MyQEditor.vue";
 
 const exStore = useExampleStore()
 
@@ -90,9 +100,17 @@ const ndate = ref<string|null>()
 const accts = exStore.accounts
 const acvalue = ref<any>(exStore.activeAcct)
 
+const note = ref(exStore.note)
+// const note = exStore.note
+
 function updateAcct(evt) {
   console.log('update acct fired', evt)
   exStore.setAccount( evt )
+}
+
+function updateNote(evt) {
+  console.log('update note fired', evt)
+  exStore.note = evt
 }
 
 </script>

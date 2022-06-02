@@ -21,7 +21,8 @@ export const useExampleStore = defineStore('example', {
     tags: [...itags],
     accounts: [...iaccts],
     activeTags: [] as string[],
-    activeAcct: null
+    activeAcct: null,
+    note: `This is a sample NOTE as defined <b>herein</b> and has html`
   }),
 
   getters: {
