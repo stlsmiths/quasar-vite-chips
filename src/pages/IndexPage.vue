@@ -51,7 +51,16 @@
       <h6>AutoComplete Components:</h6>
       <div class="row">
         <div class="col-3">
-
+          <MyQAutoComp
+            v-model="acvalue"
+            :items="accts"
+            label="Account Selector ..."
+            option-label="aname"
+            option-value="aid"
+            :emit-value="true"
+            @update:model-value="updateAcct"
+          />
+          acvalue {{ acvalue }}
         </div>
         <div class="col-3">
 
@@ -63,9 +72,14 @@
 
 <script setup lang="ts">
 import { Todo, Meta } from 'components/models';
-import {  ref } from 'vue';
+import { ref } from 'vue';
 import TRDatePicker from "components/TRDatePicker.vue";
 import MyQDatePicker from "components/MyQDatePicker.vue";
+import MyQAutoComp from "components/MyQAutoComp.vue";
+
+import {useExampleStore} from "stores/example-store";
+
+const exStore = useExampleStore()
 
 //    const todos = ref<Todo[]>([
 const meta = ref<Meta>({  totalCount: 1200 });
@@ -73,5 +87,12 @@ const meta = ref<Meta>({  totalCount: 1200 });
 const idate = ref<string>('2019-10-05')
 const ndate = ref<string|null>()
 
+const accts = exStore.accounts
+const acvalue = ref<any>(exStore.activeAcct)
+
+function updateAcct(evt) {
+  console.log('update acct fired', evt)
+  exStore.setAccount( evt )
+}
 
 </script>

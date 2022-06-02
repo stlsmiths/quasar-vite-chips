@@ -2,7 +2,7 @@
     <q-select
       v-if="items && items.length"
       ref="qselect"
-      :value="lvalue"
+      v-model="lvalue"
       :label="label"
       :options="options"
       filled
@@ -15,8 +15,9 @@
       :disable="disable"
       :option-label="optionLabel"
       :option-value="optionValue"
-      @input-value="lvalue = $event"
       input-debounce="200"
+      @input-value="lvalue = $event"
+      @update:model-value="updateValue"
       @clear="clearInput"
       @filter="filterFn"
       @input="inputEvent"
@@ -25,20 +26,19 @@
 </template>
 
 <script setup lang="ts">
-import {ref,computed,watch} from 'vue'
+import {ref,watch,watchEffect} from 'vue'
 
 // import {arrayMultiSort} from 'src/common/common-functions';
-function arrayMultiSort(arr) {
+function arrayMultiSort(arr: any[], order: any): any[] {
   return arr
 }
 
-const emits = defineEmits([ 'input', 'update:model-value' ])
+const emits = defineEmits([ 'input', 'clear', 'update:model-value'])
 
 const props = defineProps({
-  value: {
+  modelValue: {
     type: [String,Number,Object],
   },
-
   items: {
     type: Array,
     required: true
@@ -71,67 +71,80 @@ const props = defineProps({
 const lvalue = ref<any>()
 const original = ref<any>()
 const options = ref<any[]>([])
+const qselect = ref<any>()
 
+/*
 watch(
     () => props.value,
     (v) => { syncValue(v) },
     {immediate: true}
 )
-
-/*
-  watch: {
-    value: {
-      handler: 'syncValue',
-      immediate: true,
-      deep: true
-    },
-  },
 */
 
-function syncValue(val) {
+watchEffect( () => {
+  syncValue( props.modelValue )
+})
+
+watch(
+  () => props.items,
+  (vals) => {
+    if ( vals && vals.length ) {
+      options.value = props.sortOrder ? arrayMultiSort( [...vals], props.sortOrder) : [...vals]
+    }
+  },
+  {immediate: true}
+)
+
+function syncValue(val: any): void {
   lvalue.value = val
   if ( !original.value ) {
     original.value = val
   }
+  console.log('syncValue', lvalue.value, 'original', original.value)
+}
+
+function filterFn( val: string, update: Function ) {
+  update(() => {
+    console.log('update fired', val)
+    if ( !val.length ) {
+      options.value = props.items
+    } else {
+      const needle = val && val.toLowerCase ? val.toLowerCase() : ''
+      const loptions = props.items.filter( v => {
+          const chk = v[props.optionLabel] && v[props.optionLabel].toLowerCase
+            ? v[props.optionLabel] : v[props.optionValue]
+          return chk && chk.toLowerCase ? chk.toLowerCase().includes( needle ) : false
+        })
+      if ( props.sortOrder ) {
+        console.log('using sortOrder', props.sortOrder)
+      }
+      options.value = props.sortOrder ? arrayMultiSort( loptions, props.sortOrder ) : loptions
+    }
+  })
 }
 
 //TODO: fix this, to work with clearable and reset ... not working properly
-function clearInput() {
-     // console.log('clearval', this.lvalue, this.original)
-      this.$refs.qselect.updateInputValue('',true)
-      this.$nextTick( () => {
-        this.lvalue = this.original
-      })
-    }
-
-function filterFn( val, update ) {
-      update(() => {
-        if ( !val.length ) {
-          this.options = this.items
-        } else {
-          const needle = val && val.toLowerCase ? val.toLowerCase() : ''
-          const options = this.items.filter( v => {
-              const chk = v[this.optionLabel] && v[this.optionLabel].toLowerCase ? v[this.optionLabel] : v[this.optionValue]
-              return chk && chk.toLowerCase ? chk.toLowerCase().includes( needle ) : false
-            })
-          if ( this.sortOrder ) {
-            console.log('using sortOrder', this.sortOrder)
-          }
-          this.options = this.sortOrder ? arrayMultiSort( options, this.sortOrder ) : options
-        }
-      })
-    }
-
-function inputEvent( evt ) {
-//   console.log('input event', evt, this.lvalue )
-  this.$emit('input', evt )
+function clearInput(): void {
+  // console.log('clearval', this.lvalue, this.original)
+  // this.$refs.qselect.updateInputValue('',true)
+  console.log('clearInput')
+  qselect.value.updateInputValue('',true)
+  // this.$nextTick( () => {
+  lvalue.value = original.value
+  emits('clear')
+  //})
 }
 
-function mounted() {
-  if ( this.items && this.items.length ) {
-    this.options = this.sortOrder ? arrayMultiSort( [...this.items],this.sortOrder) : [...this.items]
-  }
+function inputEvent( evt: any ) {
+  console.log('input event', evt, lvalue.value )
+  emits('input', evt )
 }
+
+function updateValue(evt: any) {
+  lvalue.value = evt
+  emits('update:model-value', evt)
+}
+
 </script>
 
 <style scoped>

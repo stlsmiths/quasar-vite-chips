@@ -20,12 +20,15 @@ export const useExampleStore = defineStore('example', {
     counter: 0,
     tags: [...itags],
     accounts: [...iaccts],
-    activeTags: [] as string[]
+    activeTags: [] as string[],
+    activeAcct: null
   }),
+
   getters: {
     initTags: (state) => state.activeTags.length ? state.activeTags : [ itags[2], itags[3], itags[6] ],
     doubleCount: (state) => state.counter * 2,
   },
+
   actions: {
     increment(): void {
       this.counter++;
@@ -36,8 +39,13 @@ export const useExampleStore = defineStore('example', {
     dropTag(tag: string): void {
       this.tags = this.tags.filter( t => t !== tag )
     },
+
     setTags(tags: string[]): void {
       this.activeTags = [...tags]
+    },
+
+    setAccount(acct: any): void {
+      this.activeAcct = acct
     }
   },
 });
